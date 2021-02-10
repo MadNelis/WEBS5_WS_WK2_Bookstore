@@ -1,26 +1,32 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
 
-console.log('Initializing books schema');
+console.log("Initializing books schema");
 
-var bookSchema = new mongoose.Schema({
-    /*
-    TODO: 2 - Schema books vullen
-    - Title: Verplicht, String
-    - PublishDate: Verplicht, Date, voor vandaag
-    - Category: Verplicht, String
-    - Chapters: Array van JSNON { title, numberOfPages }
-    */
+var bookSchema = new mongoose.Schema(
+  {
+    _id: { type: String, required: true },
+    title: { type: String, required: true },
+    publishDate: { type: Date, required: true, max: Date.now() },
+    category: { type: String, required: true },
+    chapters: [
+      {
+        title: { type: String, required: true },
+        numberOfPages: { type: Number, required: true },
+      },
+    ],
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+bookSchema.virtual("totalNumberOfPages").get(function () {
+  let total = this.chapters.reduce((acc, cur) => {
+    return acc + cur.numberOfPages;
+  }, 0);
+
+  return total;
 });
 
-/*
-TODO: 5 - Virtual property totalNumberOfPages, opgebouwd uit numberOfPages van chapters)
-- De benodigde extra validation
-- De benodigde query methods
-- De benodigde instance methods
-*/
-
-mongoose.model('Book', bookSchema);
-
-
-
-
+mongoose.model("Book", bookSchema);

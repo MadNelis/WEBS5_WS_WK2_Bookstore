@@ -7,7 +7,7 @@ var authorSchema = new mongoose.Schema({
     lastName: { type: String, required: true },
     birthDate: { type: Date, required: true },
     country: { type: String, default: 'NL' },
-    ranking: { type: Number, unique: true, min: 1 },
+    ranking: { type: Int, unique: true, min: 1 },
     books: [{ type: String, ref: 'Book' }]
 }, {
     toJSON: { virtuals: true },

@@ -15,7 +15,7 @@ require('./models/book');
 require('./models/author');
 require('./models/fillTestData')();
 
-function handleError(req, res, statusCode, message){
+function handleError(req, res, statusCode, message) {
     console.log();
     console.log('-------- Error handled --------');
     console.log('Request Params: ' + JSON.stringify(req.params));

@@ -40,9 +40,15 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+/////////////////////////////////////
+/////////////////////////////////////
 app.use('/', require('./routes/index'));
 app.use('/books', require('./routes/books')(handleError));
 app.use('/authors', require('./routes/authors')(handleError));
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -75,5 +81,8 @@ app.use(function(err, req, res, next) {
     });
 });
 
-
 module.exports = app;
+
+var listener = app.listen(8888, function() {
+    console.log('Listening on port ' + listener.address().port); //Listening on port 8888
+});

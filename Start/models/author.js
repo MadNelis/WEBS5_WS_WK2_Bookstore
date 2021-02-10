@@ -1,24 +1,36 @@
-var mongoose = require('mongoose');
+var mongoose = require("mongoose");
+const { first } = require("underscore");
 
-console.log('Initializing author schema');
+console.log("Initializing author schema");
 
-var authorSchema = new mongoose.Schema({
-    /*
-    TODO: 1 - Schema authors vullen
-    - Firstname: Verplicht, String
-    - Lastname: Verplicht, String
-    - Birthdate: Verplicht, Date, voor vandaag
-    - Country: String, default: NL
-    - Ranking: Number, boven 0
-    - Books: Array van book id's
-    */
+var authorSchema = new mongoose.Schema(
+  {
+    firstname: { type: String, required: true },
+    lastname: { type: String, required: true },
+    birthdate: { type: Date, required: true, max: Date.now() },
+    country: { type: String, default: "NL" },
+    ranking: { type: Number, min: 1 },
+    // books: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Book' }],
+    books: [{ type: String, ref: "Book" }],
+  },
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
+
+authorSchema.virtual("fullName").get(function () {
+  return `${this.firstname} ${this.lastname}`;
 });
 
-/*
-    TODO: 7 - Projecting:
-    - fullname is een property die opgehaald wordt
-    - age is een property die opgehaald wordt
-    - numberOfBooks is een property die opgehaald wordt
-*/
+authorSchema.virtual("age").get(function () {
+  const date = new Date(Date.now() - this.birthdate.getTime());
 
-mongoose.model('Author', authorSchema);
+  return date.getFullYear() - 1970;
+});
+
+authorSchema.virtual('numberOfBooks').get(function () {
+    return this.books.length;
+});
+
+mongoose.model("Author", authorSchema);
